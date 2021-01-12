@@ -1,0 +1,14 @@
+<div class="spaces-space" style="position: absolute; right: 0; bottom: 0; width: @Size; left: 0;@style">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter]
+    public string style { get; set; }
+
+    [Parameter]
+    public string Size { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

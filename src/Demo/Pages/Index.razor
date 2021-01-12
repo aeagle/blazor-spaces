@@ -1,0 +1,22 @@
+@page "/"
+@using BlazorWasmApp.Pages.Spaces
+
+<Fill>
+    <Fill>
+        Main
+    </Fill>
+    <Left Size='@sidebarSize' style="background-color: #ffeeee;">
+        Sidebar
+        <p><button @onclick="ButtonClicked">Toggle</button></p>
+    </Left>
+</Fill>
+
+@code {
+    bool expanded { get; set; } = false;
+    string sidebarSize => expanded ? "50%" : "25%";
+
+    private void ButtonClicked(MouseEventArgs e)
+    {
+        expanded = !expanded;
+    }
+}
