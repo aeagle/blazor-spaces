@@ -1,0 +1,43 @@
+@using BlazorSpaces
+@implements IAsyncDisposable
+@inherits SpaceComponentBase
+@inject IJSRuntime JS
+
+<div id="@spaceId" class="@ClassName" style="@Style">
+    <CascadingValue Value="@spaceId" Name="ParentId">
+        @ChildContent
+    </CascadingValue>
+</div>
+
+@code {
+    SpaceStore store => SpaceStore.Instance(JS);
+    [CascadingParameter(Name = "ParentId")] string ParentId { get; set; }
+    string spaceId;
+
+    protected override Task OnInitializedAsync()
+    {
+        spaceId = Id = Id ?? $"s{Guid.NewGuid().ToString().Replace("-", "")}";
+        var space = store.CreateSpace(ParentId, this, () => { StateHasChanged(); });
+        return store.AddSpace(space);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var space = store.GetSpace(spaceId);
+
+        if (space != null)
+        {
+            await store.UpdateSpace(space, this);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        var space = store.GetSpace(spaceId);
+
+        if (space != null)
+        {
+            await store.RemoveSpace(space);
+        }
+    }
+}

@@ -1,14 +1,25 @@
-<div class="spaces-space" style="position: absolute; right: 0; bottom: 0; width: @Size; left: 0;@style">
+@using BlazorSpaces
+@inherits AnchoredComponentBase
+
+<Space Id="@Id" ClassName="@ClassName" Style="@Style" As="@As" CenterContent="@CenterContent" ZIndex="@ZIndex"
+    Scrollable="@Scrollable" TrackSize="@TrackSize" Type="@SpaceType.Anchored" Anchor="@AnchorType.Bottom"
+    Position="@position">
     @ChildContent
-</div>
+</Space>
 
 @code {
-    [Parameter]
-    public string style { get; set; }
 
-    [Parameter]
-    public string Size { get; set; }
+    public PositionalProps position => new PositionalProps
 
-    [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    {
+
+        Right = "0",
+
+        Left = "0",
+
+        Bottom = "0",
+
+        Height = Size
+
+    };
 }

@@ -1,8 +1,18 @@
-<div class="spaces-viewport" style="position: fixed; left: 0; top: 0; right: 0; bottom: 0;">
+@using BlazorSpaces
+@inherits AnchoredComponentBase
+
+<Space Id="@Id" ClassName="@ClassName" Style="@Style" As="@As" CenterContent="@CenterContent" ZIndex="@ZIndex"
+    Scrollable="@Scrollable" TrackSize="@TrackSize" Type="@SpaceType.ViewPort"
+    Position="@position">
     @ChildContent
-</div>
+</Space>
 
 @code {
-    [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public PositionalProps position => new PositionalProps
+    {
+        Left = "0",
+        Top = "0",
+        Bottom = "0",
+        Right = "0"
+    };
 }

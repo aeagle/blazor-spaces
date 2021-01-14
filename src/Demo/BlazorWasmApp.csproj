@@ -10,4 +10,9 @@
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- extends watching group to include *.razor files -->
+    <Watch Include="**\*.razor" />
+</ItemGroup>
+
 </Project>
