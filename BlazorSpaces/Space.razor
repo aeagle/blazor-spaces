@@ -1,10 +1,9 @@
-@using BlazorSpaces
 @implements IAsyncDisposable
 @inherits SpaceComponentBase
 @inject IJSRuntime JS
 
 <div id="@spaceId" class="@ClassName" style="@Style">
-    <CascadingValue Value="@spaceId" Name="ParentId">
+    <CascadingValue Value="@spaceId" Name="ParentId" IsFixed="true">
         @ChildContent
     </CascadingValue>
 </div>

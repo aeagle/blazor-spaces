@@ -12,7 +12,11 @@
 
   <ItemGroup>
     <!-- extends watching group to include *.razor files -->
-    <Watch Include="**\*.razor" />
+    <Watch Include="..\**\*.razor" />
 </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorSpaces\BlazorSpaces.csproj" />
+  </ItemGroup>
 
 </Project>

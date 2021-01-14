@@ -1,18 +1,24 @@
-@using BlazorSpaces
 @inherits AnchoredComponentBase
 
 <Space Id="@Id" ClassName="@ClassName" Style="@Style" As="@As" CenterContent="@CenterContent" ZIndex="@ZIndex"
-    Scrollable="@Scrollable" TrackSize="@TrackSize" Type="@SpaceType.Anchored" Anchor="@AnchorType.Top"
+    Scrollable="@Scrollable" TrackSize="@TrackSize" Type="@SpaceType.Anchored" Anchor="@AnchorType.Left"
     Position="@position">
     @ChildContent
 </Space>
 
 @code {
+
     public PositionalProps position => new PositionalProps
+
     {
-        Right = "0",
+
         Left = "0",
+
         Top = "0",
-        Height = Size
+
+        Bottom = "0",
+
+        Width = Size
+
     };
 }
