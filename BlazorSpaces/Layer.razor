@@ -1,0 +1,16 @@
+<CascadingValue Value="@((int?)ZIndex)" Name="Layer" IsFixed="true">
+    @ChildContent
+</CascadingValue>
+
+@code {
+
+    [Parameter]
+
+    public int ZIndex { get; set; }
+
+
+
+    [Parameter]
+
+    public RenderFragment ChildContent { get; set; }
+}

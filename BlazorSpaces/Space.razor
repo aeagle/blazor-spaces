@@ -2,38 +2,65 @@
 @inherits SpaceComponentBase
 @inject IJSRuntime JS
 
-<div id="@spaceId" class="@ClassName" style="@Style">
-    <CascadingValue Value="@spaceId" Name="ParentId" IsFixed="true">
-        @ChildContent
-    </CascadingValue>
+<div id="@spaceId" class="@outerClass">
+    <div class="@innerClass" style="@Style">
+        <CascadingValue Value="@space.Id" Name="ParentId" IsFixed="true">
+                @ChildContent
+        </CascadingValue>
+    </div>
 </div>
 
 @code {
     SpaceStore store => SpaceStore.Instance(JS);
-    [CascadingParameter(Name = "ParentId")] string ParentId { get; set; }
+    SpaceDefinition space;
     string spaceId;
+    string outerClass;
+    string innerClass;
 
-    protected override Task OnInitializedAsync()
+    [CascadingParameter(Name = "ParentId")] string ParentId { get; set; }
+    [CascadingParameter(Name = "Layer")] int? Layer { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
         spaceId = Id = Id ?? $"s{Guid.NewGuid().ToString().Replace("-", "")}";
-        var space = store.CreateSpace(ParentId, this, () => { StateHasChanged(); });
-        return store.AddSpace(space);
+        ZIndex = Layer ?? ZIndex;
+
+        space = store.CreateSpace(ParentId, this, () => { StateHasChanged(); });
+        await store.AddSpace(space);
+
+        updateClasses();
     }
 
     protected override async Task OnParametersSetAsync()
     {
-        var space = store.GetSpace(spaceId);
-
         if (space != null)
         {
             await store.UpdateSpace(space, this);
         }
+
+        updateClasses();
+    }
+
+    private void updateClasses() 
+    {
+        var userClasses = ClassName != null ? ClassName.Split(" ").Select(c => c.Trim()) : Enumerable.Empty<string>();
+        
+        List<string> outerClasses = new();
+        outerClasses.Add("spaces-space");
+        if (space.Children.Any(c => c.Resizing)) {
+            outerClasses.Add("spaces-resizing");
+        }
+        outerClasses.AddRange(userClasses.Select(c => $"{c}-container"));
+        outerClass = string.Join(" ", outerClasses);
+
+        List<string> innerClasses = new();
+        innerClasses.Add("spaces-space-inner");
+        innerClasses.AddRange(userClasses);
+        innerClass = string.Join(" ", innerClasses);
     }
 
     public async ValueTask DisposeAsync()
     {
-        var space = store.GetSpace(spaceId);
-
         if (space != null)
         {
             await store.RemoveSpace(space);

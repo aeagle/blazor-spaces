@@ -2,23 +2,6 @@
 
 <Space Id="@Id" ClassName="@ClassName" Style="@Style" As="@As" CenterContent="@CenterContent" ZIndex="@ZIndex"
     Scrollable="@Scrollable" TrackSize="@TrackSize" Type="@SpaceType.Anchored" Anchor="@AnchorType.Right"
-    Position="@position">
+    Position='@PositionalProps.Create().Right("0").Top("0").Bottom("0").Width(Size)'>
     @ChildContent
 </Space>
-
-@code {
-
-    public PositionalProps position => new PositionalProps
-
-    {
-
-        Right = "0",
-
-        Top = "0",
-
-        Bottom = "0",
-
-        Width = Size
-
-    };
-}
