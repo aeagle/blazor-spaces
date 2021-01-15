@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 
 namespace BlazorSpaces
@@ -29,10 +30,10 @@ namespace BlazorSpaces
 
         private static IEnumerable<AnchorType> AnchorTypes =>
             new[] {
-            AnchorType.Left,
-            AnchorType.Top,
-            AnchorType.Right,
-            AnchorType.Bottom
+                AnchorType.Left,
+                AnchorType.Top,
+                AnchorType.Right,
+                AnchorType.Bottom
             };
 
         public static List<SpaceDefinition> spaceDefinitions { get; set; } = new();
@@ -182,7 +183,7 @@ namespace BlazorSpaces
             {
                 if (size.Size == "0" && !size.Adjusted.Any() && size.Resized == 0)
                 {
-                    return "0";
+                    return "0px";
                 }
 
                 List<string> parts = new();
@@ -276,6 +277,50 @@ namespace BlazorSpaces
             if (cssString.Any())
             {
                 cssElements.Add($"#{space.Id} {{ {string.Join(" ", cssString)} }}");
+            }
+
+            if (space.Scrollable)
+            {
+                cssElements.Add($"#{space.Id} > .spaces-space-inner {{ overflow: auto; touch-action: auto; }}");
+            }
+
+            var handleOffset = 0;
+            var touchHandleSize = space.TouchHandleSize / 2 - space.HandleSize / 2;
+
+            switch (space.HandlePlacement)
+            {
+                case ResizeHandlePlacement.Inside:
+                case ResizeHandlePlacement.OverlayInside:
+                    handleOffset = space.HandleSize;
+                    if (space.Type == SpaceType.Positioned)
+                    {
+                        handleOffset = 0;
+                    }
+                    break;
+                case ResizeHandlePlacement.OverlayBoundary:
+                    handleOffset = space.HandleSize / 2;
+                    break;
+            }
+
+            if (space.CanResizeLeft)
+            {
+                cssElements.Add($"#{space.Id}-ml {{ left: calc({css(space.Left, true)} + {css(space.Width, true)} - {handleOffset}px); width: {space.HandleSize}px; }}");
+                cssElements.Add($"#{space.Id}-ml:after {{ left: -{touchHandleSize}px; right: -{touchHandleSize}px; top: 0; bottom: 0; }}");
+            }
+            if (space.CanResizeTop)
+            {
+                cssElements.Add($"#{space.Id}-mt {{ top: calc({css(space.Top, true)} + {css(space.Height, true)} - {handleOffset}px); height: {space.HandleSize}px; }}");
+                cssElements.Add($"#{space.Id}-mt:after {{ top: -{touchHandleSize}px; bottom: -{touchHandleSize}px; left: 0; right: 0; }}");
+            }
+            if (space.CanResizeRight)
+            {
+                cssElements.Add($"#{space.Id}-mr {{ right: calc({css(space.Right, true)} + {css(space.Width, true)} - {handleOffset}px); width: {space.HandleSize}px; }}");
+                cssElements.Add($"#{space.Id}-mr:after {{ left: -{touchHandleSize}px; right: -{touchHandleSize}px; top: 0; bottom: 0; }}");
+            }
+            if (space.CanResizeBottom)
+            {
+                cssElements.Add($"#{space.Id}-mb {{ bottom: calc({css(space.Bottom, true)} + {css(space.Height, true)} - {handleOffset}px); height: {space.HandleSize}px; }}");
+                cssElements.Add($"#{space.Id}-mb:after {{ top: -{touchHandleSize}px; bottom: -{touchHandleSize}px; left: 0; right: 0; }}");
             }
 
             return string.Join(" ", cssElements);
@@ -590,17 +635,17 @@ namespace BlazorSpaces
             return newSpace;
         }
 
-        public void StartMouseResize()
+        public void StartMouseResize(ResizeType resizeType, SpaceDefinition space, MouseEventArgs e)
         {
 
         }
 
-        public void StartTouchResize()
+        public void StartTouchResize(ResizeType resizeType, SpaceDefinition space, TouchEventArgs e)
         {
 
         }
 
-        public void StartMouseDrag()
+        public void StartMouseDrag(ResizeType resizeType, SpaceDefinition space)
         {
 
         }

@@ -3,44 +3,44 @@
 <Fill>
     @if (visible)
     {
-    <Left Size='@sidebarSize' style="background-color: #ffeeee;">
-        Left
-        <p><button @onclick="ToggleSize">Toggle</button></p>
-    </Left>
+        <LeftResizable Size="@sidebarSize" style="background-color: #ffeeee; padding: 10px;">
+            Left
+            <p><button @onclick="ToggleSize">Toggle</button></p>
+        </LeftResizable>
     }
     <Fill>
         <Layer ZIndex="2">
-            <Top Size="25%" style="background-color: #eeeeff;">
+            <TopResizable Size="25%" style="background-color: #eeeeff; padding: 10px;">
                 Top
-            </Top>
+            </TopResizable>
             <Fill>
-                <Left Size='25%' style="background-color: #eeffee;">
+                <LeftResizable Size="25%" style="background-color: #eeffee; padding: 10px;">
                     Left
-                </Left>
+                </LeftResizable>
                 <Fill>
-                    <Top Size="25%" style="background-color: #eeeeff;">
+                    <TopResizable Size="25%" style="background-color: #eeeeff; padding: 10px;">
                         Top
-                    </Top>
-                    <Fill>
+                    </TopResizable>
+                    <Fill style="padding: 10px;">
                         Main
                         <p><button @onclick="ToggleVisibility">Toggle visibility</button></p>
                     </Fill>
-                    <Bottom Size="25%" style="background-color: #eeeeff;">
+                    <BottomResizable Size="25%" style="background-color: #eeeeff; padding: 10px;">
                         Top
-                    </Bottom>
+                    </BottomResizable>
                 </Fill>
-                <Right Size='25%' style="background-color: #ffeeee;">
+                <RightResizable Size="25%" style="background-color: #ffeeee; padding: 10px;">
                     Right
-                </Right>
+                </RightResizable>
             </Fill>
-            <Bottom Size="25%" style="background-color: #eeeeff;">
+            <BottomResizable Size="25%" style="background-color: #eeeeff; padding: 10px;">
                 Top
-            </Bottom>
+            </BottomResizable>
         </Layer>
     </Fill>
-    <Right Size='25%' style="background-color: #eeffee;">
+    <RightResizable Size="25%" style="background-color: #eeffee; padding: 10px;">
         Right
-    </Right>
+    </RightResizable>
 </Fill>
 
 @code { 

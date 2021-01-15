@@ -15,16 +15,6 @@ namespace BlazorSpaces
         public string Height { get; set; }
     }
 
-    public class PositionalProps : Position
-    {
-        public bool LeftResizable { get; set; }
-        public bool TopResizable { get; set; }
-        public bool RightResizable { get; set; }
-        public bool BottomResizable { get; set; }
-
-        public static PositionalProps Create() => new PositionalProps();
-    }
-
     public static class PositionExtensions
     {
         public static PositionalProps Left(this PositionalProps pos, string value)
@@ -96,6 +86,14 @@ namespace BlazorSpaces
     }
 
     public enum AnchorType
+    {
+        Left,
+        Right,
+        Top,
+        Bottom
+    }
+
+    public enum ResizeType
     {
         Left,
         Right,
@@ -242,6 +240,16 @@ namespace BlazorSpaces
         public string Size { get; set; }
         public int Resized { get; set; } = 0;
         public IEnumerable<string> Adjusted { get; set; } = Enumerable.Empty<string>();
+    }
+
+    public class PositionalProps : Position
+    {
+        public bool LeftResizable { get; set; }
+        public bool TopResizable { get; set; }
+        public bool RightResizable { get; set; }
+        public bool BottomResizable { get; set; }
+
+        public static PositionalProps Create() => new PositionalProps();
     }
 
     public class CommonSpaceProps : ComponentBase
