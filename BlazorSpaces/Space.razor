@@ -10,7 +10,7 @@
          @ontouchstart="@((e) => OnHandleTouchStart(e, handle.ResizeType))"/>
 }
 <div id="@spaceId" class="@outerClass()">
-    <div class="@innerClass()" style="@Style">
+    <div class="@innerClass()" style="@Style" @ref=spaceElement>
         <CascadingValue Value="@space.Id" Name="ParentId" IsFixed="true">
             @ChildContent
         </CascadingValue>
@@ -22,6 +22,7 @@
     SpaceDefinition space;
     string spaceId;
     List<ResizeHandleProps> handles;
+    ElementReference spaceElement;
 
     [CascadingParameter(Name = "ParentId")] string ParentId { get; set; }
     [CascadingParameter(Name = "Layer")] int? Layer { get; set; }
@@ -43,6 +44,12 @@
         }
     }
 
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        space.Element = spaceElement;
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
     protected async Task OnHandleMouseDown(MouseEventArgs e, ResizeType resizeType)
     {
         await store.StartMouseResize(resizeType, space, e);
@@ -53,7 +60,7 @@
         await store.StartTouchResize(resizeType, space, e);
     }
 
-    private IEnumerable<string> userClasses => 
+    private IEnumerable<string> userClasses =>
         ClassName != null ? ClassName.Split(" ").Select(c => c.Trim()) : Enumerable.Empty<string>();
 
     private string outerClass()
@@ -68,7 +75,7 @@
     }
 
     private string innerClass()
-    { 
+    {
         List<string> innerClasses = new();
         innerClasses.Add("spaces-space-inner");
         innerClasses.AddRange(userClasses);

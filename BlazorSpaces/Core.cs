@@ -329,12 +329,12 @@ namespace BlazorSpaces
         public async Task UpdateStyleDefinition(SpaceDefinition space)
         {
             var definition = styleDefinition(space);
-            await JS.InvokeVoidAsync("spaces_updateStyleDefinition", space.Id, definition);
+            await CoreUtils.UpdateStyleDefinition(JS, space.Id, definition);
         }
 
         public async Task RemoveStyleDefinition(SpaceDefinition space)
         {
-            await JS.InvokeVoidAsync("spaces_removeStyleDefinition", space.Id);
+            await CoreUtils.RemoveStyleDefinition(JS, space.Id);
         }
 
         public async Task AddSpace(SpaceDefinition space)
@@ -585,6 +585,7 @@ namespace BlazorSpaces
             var canResizeBottom = props.Position != null && props.Position.TopResizable ? true : false;
 
             var newSpace = new SpaceDefinition();
+            newSpace.Store = this;
             newSpace.Id = props.Id;
             newSpace.Order = props.Order ?? newSpace.Order;
             newSpace.HandleSize = props.HandleSize ?? newSpace.HandleSize;
@@ -637,7 +638,7 @@ namespace BlazorSpaces
 
         public async Task StartMouseResize(ResizeType resizeType, SpaceDefinition space, MouseEventArgs e)
         {
-            await CoreResizing.StartResize<MouseEventArgs>(
+            await CoreResizing.StartResize(
                 JS,
                 this,
                 e,
@@ -645,14 +646,17 @@ namespace BlazorSpaces
                 space,
                 "mouseup",
                 "mousemove",
-                (EventArgs e) => new Coords { X = (int)(e as MouseEventArgs).ClientX, Y = (int)(e as MouseEventArgs).ClientY },
+                (EventArgs e) => new Coords { 
+                    X = (int)(e as MouseEventArgs).ClientX, 
+                    Y = (int)(e as MouseEventArgs).ClientY 
+                },
                 space.OnResizeEnd
             );
         }
 
         public async Task StartTouchResize(ResizeType resizeType, SpaceDefinition space, TouchEventArgs e)
         {
-            await CoreResizing.StartResize<TouchEventArgs>(
+            await CoreResizing.StartResize(
                 JS,
                 this,
                 e,
@@ -660,7 +664,10 @@ namespace BlazorSpaces
                 space,
                 "touchend",
                 "touchmove",
-                (EventArgs e) => new Coords { X = (int)(e as TouchEventArgs).Touches[0].ClientX, Y = (int)(e as TouchEventArgs).Touches[0].ClientY },
+                (EventArgs e) => new Coords { 
+                    X = (int)(e as TouchEventArgs).Touches[0].ClientX, 
+                    Y = (int)(e as TouchEventArgs).Touches[0].ClientY 
+                },
                 space.OnResizeEnd
             );
         }

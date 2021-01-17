@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace BlazorSpaces
 {
-    public static class CoreResizing
+	public static class CoreResizing
     {
 		private static void customSizeHoriz(SpaceDefinition space, int adjust)
 		{
@@ -116,11 +116,11 @@ namespace BlazorSpaces
 			int customOriginal,
 			int x,
 			int y,
-			int minimumAdjust,
-			int? maximumAdjust,
+			double minimumAdjust,
+			double? maximumAdjust,
 			Action<int> customAdjust)
         {
-			var adjustment =
+			double adjustment =
 				startSize +
 				(resizeType == ResizeType.Left || resizeType == ResizeType.Right
 					? resizeType == ResizeType.Left
@@ -147,9 +147,9 @@ namespace BlazorSpaces
 
 			if (adjustment != targetSize.Resized)
             {
-				targetSize.Resized = adjustment;
+				targetSize.Resized = (int)adjustment;
 
-				customAdjust?.Invoke(adjustment + customOriginal);
+				customAdjust?.Invoke((int)adjustment + customOriginal);
 
 				await store.UpdateStyles(space);
             }
@@ -161,8 +161,8 @@ namespace BlazorSpaces
             T e,
             ResizeType resizeHandleType,
             SpaceDefinition space,
-            string EndEvent,
-            string MoveEvent,
+            string endEvent,
+            string moveEvent,
             Func<EventArgs, Coords> GetCoords,
             Action<int, DOMRect> OnResizeEnd) where T : EventArgs
         {
@@ -184,7 +184,7 @@ namespace BlazorSpaces
 			space.Resizing = true;
 			space.UpdateParent();
 
-			var rect = /* space.element.getBoundingRect */ new DOMRect();
+			var rect = await CoreUtils.GetBoundingClientRect(JS, space.Element);
 			var size = resizeType == ResizeType.Left || resizeType == ResizeType.Right ? rect.Width : rect.Height;
 			var startSize = targetSize.Resized;
 			var minimumAdjust = (space.MaximumSize ?? 20) - size + targetSize.Resized;
@@ -206,36 +206,36 @@ namespace BlazorSpaces
 					customOriginal,
 					x,
 					y,
-					minimumAdjust,
+					minimumAdjust.Value,
 					maximumAdjust,
 					customAdjust
 				);
 			}
 
 			[JSInvokable("blazorSpaces_startResize")]
-			Task withPreventDefault(T e)
+			async Task withPreventDefault(T e)
 			{
 				moved = true;
 				var newCoords = GetCoords(e);
 				lastX = newCoords.X;
 				lastY = newCoords.Y;
+
+				await resize(lastX, lastY);
+
 				// e.preventDefault();
-
-				//throttle((x, y) => window.requestAnimationFrame(() => resize(x, y)), RESIZE_THROTTLE)(lastX, lastY);
-
-				return Task.CompletedTask;
+				// throttle((x, y) => window.requestAnimationFrame(() => resize(x, y)), RESIZE_THROTTLE)(lastX, lastY);
 			};
 
 			[JSInvokable("blazorSpaces_endResize")]
-			async Task removeListener()
-            {
+			async Task removeListener(T e)
+			{
 				if (moved)
                 {
 					await resize(lastX, lastY);
                 }
 
-				//window.removeEventListener(moveEvent, blazorSpaces_startResize);
-				//window.removeEventListener(endEvent, blazorSpaces_endResize);
+				await CoreUtils.UnregisterEvent(JS, space.Id, moveEvent);
+				await CoreUtils.UnregisterEvent(JS, space.Id, endEvent);
 
 				space.Resizing = false;
 				space.UpdateParent();
@@ -243,8 +243,7 @@ namespace BlazorSpaces
 				var resizeEnd = OnResizeEnd ?? space.OnResizeEnd;
 				if (resizeEnd != null)
 				{
-					//const currentRect = space.element.getBoundingClientRect();
-					var currentRect = new DOMRect();
+					var currentRect = await CoreUtils.GetBoundingClientRect(JS, space.Element);
 					resizeEnd(
 						(int)Math.Floor(
 							resizeType == ResizeType.Left || resizeType == ResizeType.Right ? 
@@ -256,8 +255,8 @@ namespace BlazorSpaces
 				}
 			}
 
-			//window.addEventListener(moveEvent, blazorSpaces_startResize);
-			//window.addEventListener(endEvent, blazorSpaces_endResize);
+			await CoreUtils.RegisterEvent<T>(JS, space.Id, moveEvent, (e) => withPreventDefault((T)e));
+			await CoreUtils.RegisterEvent<T>(JS, space.Id, endEvent, (e) => removeListener((T)e));
 		}
 	}
 }

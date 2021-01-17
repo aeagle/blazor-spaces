@@ -128,6 +128,7 @@ namespace BlazorSpaces
         public Func<IEnumerable<string>, bool> AdjustEdge { get; set; }
         public Func<bool> OnResizeStart { get; set; }
         public Action<int, DOMRect> OnResizeEnd { get; set; }
+        public ElementReference Element { get; set; }
         public string Id { get; set; } = "";
         public SpaceType Type { get; set; }
         public AnchorType? Anchor { get; set; }
@@ -220,10 +221,10 @@ namespace BlazorSpaces
 
     public class DOMRect
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
+        public double? X { get; set; }
+        public double? Y { get; set; }
+        public double? Width { get; set; }
+        public double? Height { get; set; }
     }
 
     public class SizeInfo
