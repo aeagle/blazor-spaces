@@ -43,14 +43,14 @@
         }
     }
 
-    protected void OnHandleMouseDown(MouseEventArgs e, ResizeType resizeType)
+    protected async Task OnHandleMouseDown(MouseEventArgs e, ResizeType resizeType)
     {
-        store.StartMouseResize(resizeType, space, e);
+        await store.StartMouseResize(resizeType, space, e);
     }
 
-    protected void OnHandleTouchStart(TouchEventArgs e, ResizeType resizeType)
+    protected async Task OnHandleTouchStart(TouchEventArgs e, ResizeType resizeType)
     {
-        store.StartTouchResize(resizeType, space, e);
+        await store.StartTouchResize(resizeType, space, e);
     }
 
     private IEnumerable<string> userClasses => 

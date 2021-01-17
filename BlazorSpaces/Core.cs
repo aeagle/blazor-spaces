@@ -635,14 +635,34 @@ namespace BlazorSpaces
             return newSpace;
         }
 
-        public void StartMouseResize(ResizeType resizeType, SpaceDefinition space, MouseEventArgs e)
+        public async Task StartMouseResize(ResizeType resizeType, SpaceDefinition space, MouseEventArgs e)
         {
-
+            await CoreResizing.StartResize<MouseEventArgs>(
+                JS,
+                this,
+                e,
+                resizeType,
+                space,
+                "mouseup",
+                "mousemove",
+                (EventArgs e) => new Coords { X = (int)(e as MouseEventArgs).ClientX, Y = (int)(e as MouseEventArgs).ClientY },
+                space.OnResizeEnd
+            );
         }
 
-        public void StartTouchResize(ResizeType resizeType, SpaceDefinition space, TouchEventArgs e)
+        public async Task StartTouchResize(ResizeType resizeType, SpaceDefinition space, TouchEventArgs e)
         {
-
+            await CoreResizing.StartResize<TouchEventArgs>(
+                JS,
+                this,
+                e,
+                resizeType,
+                space,
+                "touchend",
+                "touchmove",
+                (EventArgs e) => new Coords { X = (int)(e as TouchEventArgs).Touches[0].ClientX, Y = (int)(e as TouchEventArgs).Touches[0].ClientY },
+                space.OnResizeEnd
+            );
         }
 
         public void StartMouseDrag(ResizeType resizeType, SpaceDefinition space)

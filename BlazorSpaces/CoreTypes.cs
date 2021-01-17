@@ -242,6 +242,12 @@ namespace BlazorSpaces
         public IEnumerable<string> Adjusted { get; set; } = Enumerable.Empty<string>();
     }
 
+    public class Coords
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+    }
+
     public class PositionalProps : Position
     {
         public bool LeftResizable { get; set; }
