@@ -4,10 +4,8 @@
 
 @foreach (var handle in resizeHandles())
 {
-    <div 
-         id="@handle.Id" class="@handle.ClassName" 
-         @onmousedown="@((e) => OnHandleMouseDown(e, handle.ResizeType))"
-         @ontouchstart="@((e) => OnHandleTouchStart(e, handle.ResizeType))"/>
+    <div id="@handle.Id" class="@handle.ClassName" @onmousedown="@((e) => OnHandleMouseDown(e, handle.ResizeType))"
+        @ontouchstart="@((e) => OnHandleTouchStart(e, handle.ResizeType))" />
 }
 <div id="@spaceId" class="@outerClass()">
     <div class="@innerClass()" style="@Style" @ref=spaceElement>
@@ -21,7 +19,6 @@
     SpaceStore store => SpaceStore.Instance(JS);
     SpaceDefinition space;
     string spaceId;
-    List<ResizeHandleProps> handles;
     ElementReference spaceElement;
 
     [CascadingParameter(Name = "ParentId")] string ParentId { get; set; }
@@ -61,13 +58,14 @@
     }
 
     private IEnumerable<string> userClasses =>
-        ClassName != null ? ClassName.Split(" ").Select(c => c.Trim()) : Enumerable.Empty<string>();
+        Class != null ? Class.Split(" ").Select(c => c.Trim()) : Enumerable.Empty<string>();
 
     private string outerClass()
     {
         List<string> outerClasses = new();
         outerClasses.Add("spaces-space");
-        if (space.Children.Any(c => c.Resizing)) {
+        if (space.Children.Any(c => c.Resizing))
+        {
             outerClasses.Add("spaces-resizing");
         }
         outerClasses.AddRange(userClasses.Select(c => $"{c}-container"));
@@ -89,41 +87,45 @@
         if (space.CanResizeLeft)
         {
             handles.Add(
-                new ResizeHandleProps(store, space, ResizeType.Left) {
-                    Id = $"{space.Id}-ml",
-                    ClassName = "spaces-resize-handle resize-left"
-                }
-            );
+                new ResizeHandleProps(store, space, ResizeType.Left)
+            {
+                Id = $"{space.Id}-ml",
+                ClassName = "spaces-resize-handle resize-left"
+            }
+                );
         }
 
         if (space.CanResizeRight)
         {
             handles.Add(
-                new ResizeHandleProps(store, space, ResizeType.Right) {
-                    Id = $"{space.Id}-mr",
-                    ClassName = "spaces-resize-handle resize-right"
-                }
-            );
+                new ResizeHandleProps(store, space, ResizeType.Right)
+            {
+                Id = $"{space.Id}-mr",
+                ClassName = "spaces-resize-handle resize-right"
+            }
+                );
         }
 
         if (space.CanResizeTop)
         {
             handles.Add(
-                new ResizeHandleProps(store, space, ResizeType.Top) {
-                    Id = $"{space.Id}-mt",
-                    ClassName = "spaces-resize-handle resize-top"
-                }
-            );
+                new ResizeHandleProps(store, space, ResizeType.Top)
+            {
+                Id = $"{space.Id}-mt",
+                ClassName = "spaces-resize-handle resize-top"
+            }
+                );
         }
 
         if (space.CanResizeBottom)
         {
             handles.Add(
-                new ResizeHandleProps(store, space, ResizeType.Bottom) {
-                    Id = $"{space.Id}-mb",
-                    ClassName = "spaces-resize-handle resize-bottom"
-                }
-            );
+                new ResizeHandleProps(store, space, ResizeType.Bottom)
+            {
+                Id = $"{space.Id}-mb",
+                ClassName = "spaces-resize-handle resize-bottom"
+            }
+                );
         }
 
         return handles;

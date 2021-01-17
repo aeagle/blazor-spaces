@@ -1,52 +1,56 @@
 @page "/"
 
-<Fill>
-    @if (visible)
-    {
-        <LeftResizable Size="@sidebarSize" style="background-color: #ffeeee; padding: 10px;">
-            Left
-            <p><button @onclick="ToggleSize">Toggle</button></p>
-        </LeftResizable>
-    }
+<ViewPort>
     <Fill>
-        <Layer ZIndex="2">
-            <TopResizable Size="25%" style="background-color: #eeeeff; padding: 10px;">
+        @if (visible)
+        {
+            <LeftResizable size="@sidebarSize" style="@styleRed">
+                Left
+                <p><button @onclick="ToggleSize">Toggle</button></p>
+            </LeftResizable>
+
+        }
+        <Fill>
+            <TopResizable size="25%" style="@styleBlue">
                 Top
             </TopResizable>
             <Fill>
-                <LeftResizable Size="25%" style="background-color: #eeffee; padding: 10px;">
+                <LeftResizable size="25%" style="@styleGreen">
                     Left
                 </LeftResizable>
                 <Fill>
-                    <TopResizable Size="25%" style="background-color: #eeeeff; padding: 10px;">
+                    <TopResizable size="25%" style="@styleBlue">
                         Top
                     </TopResizable>
                     <Fill style="padding: 10px;">
                         Main
                         <p><button @onclick="ToggleVisibility">Toggle visibility</button></p>
                     </Fill>
-                    <BottomResizable Size="25%" style="background-color: #eeeeff; padding: 10px;">
+                    <BottomResizable size="25%" style="@styleBlue">
                         Top
                     </BottomResizable>
                 </Fill>
-                <RightResizable Size="25%" style="background-color: #ffeeee; padding: 10px;">
+                <RightResizable size="25%" style="@styleRed">
                     Right
                 </RightResizable>
             </Fill>
-            <BottomResizable Size="25%" style="background-color: #eeeeff; padding: 10px;">
+            <BottomResizable size="25%" style="@styleBlue">
                 Top
             </BottomResizable>
-        </Layer>
+        </Fill>
+        <RightResizable size="25%" style="@styleGreen">
+            Right
+        </RightResizable>
     </Fill>
-    <RightResizable Size="25%" style="background-color: #eeffee; padding: 10px;">
-        Right
-    </RightResizable>
-</Fill>
+</ViewPort>
 
-@code { 
+@code {
     bool expanded { get; set; } = false;
     bool visible { get; set; } = true;
     string sidebarSize => expanded ? "50%" : "25%";
+    string styleRed = "background-color: #ffeeee; padding: 10px;";
+    string styleBlue = "background-color: #eeeeff; padding: 10px;";
+    string styleGreen = "background-color: #eeffee; padding: 10px;";
 
     private void ToggleSize()
     {

@@ -1,0 +1,20 @@
+<LeftResizable size="250px" minimumSize="@(210)" handlePlacement="@ResizeHandlePlacement.OverlayBoundary">
+    <Top class="header" size="60px" order="@(1)">
+        BlazorBook
+    </Top>
+    @* <Top class="search-bar" size="40px" order="@(2)">
+        Search
+        </Top> *@
+    <Fill class="component-list" scrollable="@true">
+        <h2>Heading</h2>
+        <ul>
+            <li class="active"><a>Component 1</a></li>
+            <li><a>Component 2</a></li>
+            <li><a>Component 3</a></li>
+            <li><a>Component 4</a></li>
+        </ul>
+    </Fill>
+</LeftResizable>
+
+@code {
+}

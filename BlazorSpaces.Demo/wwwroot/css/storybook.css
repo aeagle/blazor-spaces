@@ -1,0 +1,109 @@
+body {
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -moz-osx-font-smoothing: grayscale;
+}
+.storybook {
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 13px;
+  background: #f6f9fc;
+}
+.storybook .header {
+  font-size: 16px;
+  font-weight: 700;
+  padding: 20px 20px 12px 20px;
+  user-select: none;
+}
+.storybook .main-pane {
+  margin-top: 8px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+.storybook .top-bar {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px -1px 0px 0px;
+}
+.storybook .top-bar ul {
+  list-style: none;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  white-space: nowrap;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+.storybook .top-bar ul li {
+  display: inline-block;
+}
+.storybook .top-bar ul li a {
+  cursor: pointer;
+  color: #999999;
+  box-sizing: border-box;
+  white-space: normal;
+  display: inline-flex;
+  overflow: hidden;
+  vertical-align: top;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  padding: 0px 15px;
+  text-transform: capitalize;
+  transition: color 0.2s linear 0s, border-bottom-color 0.2s linear 0s;
+  height: 40px;
+  line-height: 12px;
+  background: transparent;
+  border-width: 3px 0px;
+  border-style: solid;
+  border-color: transparent;
+  border-image: initial;
+  font-weight: bold;
+  font-size: 13px;
+  user-select: none;
+}
+.storybook .top-bar ul li.active a {
+  color: #1ea7fd;
+  border-bottom: 3px solid #1ea7fd;
+}
+.storybook .search-bar {
+  padding: 0 20px;
+}
+.storybook .component-list h2 {
+  font-family: "Nunito Sans", sans-serif;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  font-weight: 900;
+  font-size: 11px;
+  line-height: 24px;
+  color: rgba(51, 51, 51, 0.5);
+  margin: 0 20px 5px 20px;
+  padding: 0;
+}
+.storybook .component-list ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.storybook .component-list ul li a {
+  display: block;
+  color: black;
+  text-decoration: none;
+  font-size: 13px;
+  line-height: 24px;
+  padding: 0 20px;
+  cursor: pointer;
+  user-select: none;
+}
+.storybook .component-list ul li a:hover {
+  color: #333333;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.storybook .component-list ul li.active a {
+  background-color: #1ea7fd;
+  font-weight: 700;
+  color: white;
+}

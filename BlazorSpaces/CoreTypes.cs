@@ -264,7 +264,7 @@ namespace BlazorSpaces
         [Parameter]
         public string Id { get; set; }
         [Parameter]
-        public string ClassName { get; set; }
+        public string Class { get; set; }
         [Parameter]
         public string Style { get; set; }
         [Parameter]

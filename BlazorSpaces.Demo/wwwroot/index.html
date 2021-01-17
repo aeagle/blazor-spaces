@@ -1,229 +1,26 @@
 ﻿<!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <title>React Spaces Demo</title>
+        <base href="/" />
+        <link href="css/app.css" rel="stylesheet" />
+        <link href="css/spaces.css" rel="stylesheet" />
+        <link href="css/storybook.css" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;1,700;2,900&display=swap" rel="stylesheet">
+    </head>
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>BlazorWasmApp</title>
-    <base href="/" />
-    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
-    <link href="css/app.css" rel="stylesheet" />
-    <link href="BlazorWasmApp.styles.css" rel="stylesheet" />
-    <style>
-        .spaces-centered-vertically {
-            position: relative;
-            top: 50%;
-            transform: translateY(-50%);
-        }
+    <body>
+        <div id="app">Loading...</div>
 
-        .spaces-centered {
-            position: relative;
-            top: 50%;
-            transform: translateY(-50%);
-            text-align: center;
-        }
-
-        .spaces-clearfix:after {
-            content: "";
-            display: table;
-            clear: both;
-        }
-
-        .spaces-fixedsize-layout {
-            overflow: hidden;
-            position: relative;
-        }
-
-        .spaces-fullpage-layout {
-            position: fixed;
-            overflow: hidden;
-        }
-
-        .spaces-resize-handle {
-            position: absolute;
-            z-index: 9999;
-            /*background: transparent;*/
-            background-color: red;
-            opacity: 0.5;
-        }
-
-        .spaces-resize-handle:before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 2;
-        }
-
-        .spaces-resize-handle:after {
-            content: "";
-            position: absolute;
-            z-index: 1;
-        }
-
-        .spaces-touch-handle {
-            position: absolute;
-            z-index: 9998;
-            pointer-events: all;
-            background: transparent;
-        }
-
-        .spaces-resize-handle.resize-left {
-            top: 0;
-            bottom: 0;
-        }
-
-        .spaces-resize-handle.resize-left:before {
-            cursor: w-resize;
-        }
-
-        .spaces-touch-handle.resize-left {
-            top: 0;
-            bottom: 0;
-        }
-
-        .spaces-resize-handle.resize-right {
-            top: 0;
-            bottom: 0;
-        }
-
-        .spaces-resize-handle.resize-right:before {
-            cursor: e-resize;
-        }
-
-        .spaces-touch-handle.resize-right {
-            top: 0;
-            bottom: 0;
-        }
-
-        .spaces-resize-handle.resize-top {
-            left: 0;
-            right: 0;
-        }
-
-        .spaces-resize-handle.resize-top:before {
-            cursor: n-resize;
-        }
-
-        .spaces-touch-handle.resize-top {
-            left: 0;
-            right: 0;
-        }
-
-        .spaces-resize-handle.resize-bottom {
-            left: 0;
-            right: 0;
-        }
-
-        .spaces-resize-handle.resize-bottom:before {
-            cursor: s-resize;
-        }
-
-        .spaces-touch-handle.resize-bottom {
-            left: 0;
-            right: 0;
-        }
-
-        .spaces-space {
-            overflow: hidden;
-            touch-action: none;
-            box-sizing: border-box;
-        }
-
-        .spaces-resizing .spaces-space {
-            transition: none !important;
-        }
-
-        .spaces-space .spaces-space-inner {
-            position: absolute;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            box-sizing: border-box;
-        }
-
-        .spaces-space.scrollable .spaces-space-inner,
-        .spaces-space.scrollable-a {
-            overflow: auto;
-            touch-action: auto;
-        }
-    </style>
-    <script>
-        function spaces_updateStyleDefinition(id, definition) {
-            const existing = document.getElementById(`style_${id}`);
-
-            if (existing) {
-                if (existing.innerHTML !== definition) {
-                    existing.innerHTML = definition;
-                }
-            } else {
-                const newStyle = document.createElement("style");
-                newStyle.id = `style_${id}`;
-                newStyle.innerHTML = definition;
-                document.head.appendChild(newStyle);
-            }
-        }
-
-        function spaces_removeStyleDefinition(id) {
-            const existing = document.getElementById(`style_${id}`);
-            if (existing) {
-                document.head.removeChild(existing);
-            }
-        }
-
-        function spaces_getBoundingClientRect(element) {
-            return element.getBoundingClientRect();
-        }
-
-        const spaces_eventListeners = [];
-
-        function spaces_registerevent(spaceId, eventName) {
-            let callback = spaces_eventListeners.find(e => e.spaceId === spaceId && e.eventName === e.eventName);
-            if (!callback) {
-                callback = (e) => spaces_notifyevent(spaceId, eventName, e);
-                spaces_eventListeners.push(callback);
-                window.addEventListener(eventName, callback);
-            }
-        }
-
-        function spaces_unregisterevent(spaceId, eventName) {
-            let callback = spaces_eventListeners.find(e => e.spaceId === spaceId && e.eventName === e.eventName);
-            if (callback) {
-                window.removeEventListener(eventName, callback);
-            }
-        }
-
-        function spaces_notifyevent(spaceId, eventName, eventArgs) {
-            let args = {}
-
-            switch (eventName) {
-                case "mousemove":
-                case "mouseup":
-                    args = { clientX: eventArgs.clientX, clientY: eventArgs.clientY };
-                    break;
-                case "touchmove":
-                case "touchend":
-                    args = { touches: eventArgs.touches }
-                    break;
-            }
-
-            DotNet.invokeMethodAsync('BlazorSpaces', 'spaces_notifyevent', spaceId, eventName, args);
-        }
-    </script>
-</head>
-
-<body>
-    <div id="app">Loading...</div>
-
-    <div id="blazor-error-ui">
-        An unhandled error has occurred.
-        <a href="" class="reload">Reload</a>
-        <a class="dismiss">🗙</a>
-    </div>
-    <script src="_framework/blazor.webassembly.js"></script>
-</body>
-
+        <div id="blazor-error-ui">
+            An unhandled error has occurred.
+            <a href="" class="reload">Reload</a>
+            <a class="dismiss">🗙</a>
+        </div>
+        <script src="_framework/blazor.webassembly.js"></script>
+        <script src="js/spaces.js"></script>
+    </body>
 </html>
