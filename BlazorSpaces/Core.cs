@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
@@ -10,20 +11,13 @@ namespace BlazorSpaces
     public class SpaceStore
     {
         private static SpaceStore instance;
-        public static SpaceStore Instance(IJSRuntime JS)
+        public static SpaceStore Instance()
         {
             if (instance == null)
             {
-                instance = new SpaceStore(JS);
+                instance = new SpaceStore();
             }
             return instance;
-        }
-
-        private IJSRuntime JS;
-
-        public SpaceStore(IJSRuntime JS)
-        {
-            this.JS = JS;
         }
 
         private static SpaceDefinition spaceDefaults = new();
@@ -48,7 +42,7 @@ namespace BlazorSpaces
             return spaceDefinitions.FirstOrDefault(s => s.Id == id);
         }
 
-        public async Task RecalcSpaces(SpaceDefinition parent)
+        public async Task RecalcSpaces(IJSRuntime JS, SpaceDefinition parent)
         {
             IEnumerable<SpaceDefinition> addDefaultOrders(IEnumerable<SpaceDefinition> spaces)
             {
@@ -169,7 +163,7 @@ namespace BlazorSpaces
 
                 if (changed)
                 {
-                    await UpdateStyleDefinition(space);
+                    await UpdateStyleDefinition(JS, space);
                 }
             }
         }
@@ -326,18 +320,55 @@ namespace BlazorSpaces
             return string.Join(" ", cssElements);
         }
 
-        public async Task UpdateStyleDefinition(SpaceDefinition space)
+        public async Task UpdateStyleDefinition(IJSRuntime JS, SpaceDefinition space)
         {
             var definition = styleDefinition(space);
-            await CoreUtils.UpdateStyleDefinition(JS, space.Id, definition);
+
+            //if (RuntimeInformation.OSDescription == "web")
+            //{
+            try
+            {
+                await CoreUtils.UpdateStyleDefinition(JS, space.Id, definition);
+            }
+            catch
+            {
+
+            }
+            //}
+            //else
+            //{
+            //    space.DeferedStyleUpdates.Enqueue(definition);
+            //}
         }
 
-        public async Task RemoveStyleDefinition(SpaceDefinition space)
+        public async Task RemoveStyleDefinition(IJSRuntime JS, SpaceDefinition space)
         {
-            await CoreUtils.RemoveStyleDefinition(JS, space.Id);
+            if (RuntimeInformation.OSDescription == "web")
+            {
+                await CoreUtils.RemoveStyleDefinition(JS, space.Id);
+            }
+            else
+            {
+                space.DeferedStyleRemovals.Enqueue(space.Id);
+            }
         }
 
-        public async Task AddSpace(SpaceDefinition space)
+        public async Task ProcessDeferedStyleUpdates(IJSRuntime JS, SpaceDefinition space)
+        {
+            if (RuntimeInformation.OSDescription != "web")
+            {
+                while (space.DeferedStyleUpdates.Any())
+                {
+                    await CoreUtils.UpdateStyleDefinition(JS, space.Id, space.DeferedStyleUpdates.Dequeue());
+                }
+                while (space.DeferedStyleRemovals.Any())
+                {
+                    await CoreUtils.RemoveStyleDefinition(JS, space.Id);
+                }
+            }
+        }
+
+        public async Task AddSpace(IJSRuntime JS, SpaceDefinition space)
         {
             spaceDefinitions.Add(space);
 
@@ -347,14 +378,14 @@ namespace BlazorSpaces
                 if (parentSpace != null)
                 {
                     parentSpace.Children.Add(space);
-                    await RecalcSpaces(parentSpace);
+                    await RecalcSpaces(JS, parentSpace);
                 }
             }
 
-            await UpdateStyleDefinition(space);
+            await UpdateStyleDefinition(JS, space);
         }
 
-        public async Task RemoveSpace(SpaceDefinition space)
+        public async Task RemoveSpace(IJSRuntime JS, SpaceDefinition space)
         {
             SetSpaces(spaceDefinitions.Where(x => x.Id != space.Id));
 
@@ -364,25 +395,25 @@ namespace BlazorSpaces
                 if (parentSpace != null)
                 {
                     parentSpace.Children = parentSpace.Children.Where(x => x.Id != space.Id).ToList();
-                    await RecalcSpaces(parentSpace);
+                    await RecalcSpaces(JS, parentSpace);
                 }
             }
 
-            await RemoveStyleDefinition(space);
+            await RemoveStyleDefinition(JS, space);
         }
 
-        public async Task UpdateStyles(SpaceDefinition space)
+        public async Task UpdateStyles(IJSRuntime JS, SpaceDefinition space)
         {
             if (space.ParentId != null)
             {
                 var parentSpace = GetSpace(space.ParentId);
                 if (parentSpace != null)
                 {
-                    await RecalcSpaces(parentSpace);
+                    await RecalcSpaces(JS, parentSpace);
                 }
             }
 
-            await UpdateStyleDefinition(space);
+            await UpdateStyleDefinition(JS, space);
         }
 
         private static Orientation getOrientation(AnchorType? anchor) =>
@@ -401,7 +432,7 @@ namespace BlazorSpaces
             return "absolute";
         }
 
-        public async Task UpdateSpace(SpaceDefinition space, SpaceProps props)
+        public async Task UpdateSpace(IJSRuntime JS, SpaceDefinition space, SpaceProps props)
         {
             var canResizeLeft = props.Position != null && props.Position.RightResizable ? true : false;
             var canResizeRight = props.Position != null && props.Position.LeftResizable ? true : false;
@@ -570,10 +601,10 @@ namespace BlazorSpaces
                     var parentSpace = GetSpace(space.ParentId);
                     if (parentSpace != null)
                     {
-                        await RecalcSpaces(parentSpace);
+                        await RecalcSpaces(JS, parentSpace);
                     }
                 }
-                await UpdateStyleDefinition(space);
+                await UpdateStyleDefinition(JS, space);
             }
         }
 
@@ -636,7 +667,7 @@ namespace BlazorSpaces
             return newSpace;
         }
 
-        public async Task StartMouseResize(ResizeType resizeType, SpaceDefinition space, MouseEventArgs e)
+        public async Task StartMouseResize(IJSRuntime JS, ResizeType resizeType, SpaceDefinition space, MouseEventArgs e)
         {
             await CoreResizing.StartResize(
                 JS,
@@ -654,7 +685,7 @@ namespace BlazorSpaces
             );
         }
 
-        public async Task StartTouchResize(ResizeType resizeType, SpaceDefinition space, TouchEventArgs e)
+        public async Task StartTouchResize(IJSRuntime JS, ResizeType resizeType, SpaceDefinition space, TouchEventArgs e)
         {
             await CoreResizing.StartResize(
                 JS,

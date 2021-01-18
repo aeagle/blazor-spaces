@@ -1,0 +1,14 @@
+@page "/"
+@inject NavigationManager NavManager
+
+@code 
+{ 
+    protected override void OnInitialized()
+    {
+        try
+        {
+            NavManager.NavigateTo("/blazorbook");
+        }
+        catch { }
+    }
+}

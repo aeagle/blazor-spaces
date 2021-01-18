@@ -17,12 +17,8 @@
 </ItemGroup>
 
   <ItemGroup>
-    <Watch Remove="Pages\Stories\Stories_Demo.razor" />
-    <Watch Remove="Pages\Stories\Stories_Left.razor" />
-    <Watch Remove="Pages\Storybook\Component.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\BlazorBook\BlazorBook.csproj" />
+    <ProjectReference Include="..\BlazorSpaces.Stories\BlazorSpaces.Stories.csproj" />
     <ProjectReference Include="..\BlazorSpaces\BlazorSpaces.csproj" />
   </ItemGroup>
 

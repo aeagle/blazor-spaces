@@ -157,6 +157,9 @@ namespace BlazorSpaces
         public bool CanResizeRight { get; set; }
         public bool CanResizeBottom { get; set; }
 
+        public Queue<string> DeferedStyleUpdates { get; set; } = new();
+        public Queue<string> DeferedStyleRemovals { get; set; } = new();
+
         private bool adjustmentsEqual(IEnumerable<string> item1, IEnumerable<string> item2)
         {
             return (string.Join(",", item1) == string.Join(",", item2));

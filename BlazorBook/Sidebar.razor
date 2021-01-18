@@ -6,12 +6,12 @@
         Search
         </Top> *@
     <Fill class="component-list" scrollable="@true">
-        <h2>Heading</h2>
+        <h2>Components</h2>
         <ul>
-            @foreach (var component in BlazorBook.Components.ComponentNames)
+            @foreach (var component in BlazorBook.Components.GetAll())
             {
-                <li class="@classList(component)">
-                    <a @onclick="@(() => SetCurrentStory(component))">@component</a>
+                <li class="@classList(component.Slug)">
+                    <a @onclick="@(() => SetCurrentStory(component.Slug))">@component.Name</a>
                 </li>
             }
         </ul>

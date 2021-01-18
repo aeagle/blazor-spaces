@@ -2,9 +2,9 @@ using System;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
-using BlazorBook;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using BlazorBook;
 
 namespace BlazorSpaces.Demo
 {
@@ -14,14 +14,7 @@ namespace BlazorSpaces.Demo
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-
-            foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
-            {
-                if (type.IsSubclassOf(typeof(StoryComponent)))
-                {
-                    BlazorBook.Components.Register(type);
-                }
-            }
+            builder.RegisterAllStories(Assembly.Load("BlazorSpaces.Stories"));
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 

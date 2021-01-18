@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorBook\BlazorBook.csproj" />
+    <ProjectReference Include="..\BlazorSpaces.Stories\BlazorSpaces.Stories.csproj" />
+    <ProjectReference Include="..\BlazorSpaces\BlazorSpaces.csproj" />
+  </ItemGroup>
+
+</Project>

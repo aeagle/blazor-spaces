@@ -107,6 +107,7 @@ namespace BlazorSpaces
 		}
 
 		private static async Task onResize(
+			IJSRuntime JS,
 			SpaceStore store,
 			SpaceDefinition space,
 			SizeInfo targetSize,
@@ -151,7 +152,7 @@ namespace BlazorSpaces
 
 				customAdjust?.Invoke((int)adjustment + customOriginal);
 
-				await store.UpdateStyles(space);
+				await store.UpdateStyles(JS, space);
             }
         }
 
@@ -197,6 +198,7 @@ namespace BlazorSpaces
 			async Task resize(int x, int y)
 			{
 				await onResize(
+					JS, 
 					store,
 					space,
 					targetSize,

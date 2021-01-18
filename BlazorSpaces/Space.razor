@@ -16,7 +16,7 @@
 </div>
 
 @code {
-    SpaceStore store => SpaceStore.Instance(JS);
+    SpaceStore store => SpaceStore.Instance();
     SpaceDefinition space;
     string spaceId;
     ElementReference spaceElement;
@@ -30,14 +30,14 @@
         ZIndex = Layer ?? ZIndex;
 
         space = store.CreateSpace(ParentId, this, () => { StateHasChanged(); });
-        await store.AddSpace(space);
+        await store.AddSpace(JS, space);
     }
 
     protected override async Task OnParametersSetAsync()
     {
         if (space != null)
         {
-            await store.UpdateSpace(space, this);
+            await store.UpdateSpace(JS, space, this);
         }
     }
 
@@ -49,12 +49,12 @@
 
     protected async Task OnHandleMouseDown(MouseEventArgs e, ResizeType resizeType)
     {
-        await store.StartMouseResize(resizeType, space, e);
+        await store.StartMouseResize(JS, resizeType, space, e);
     }
 
     protected async Task OnHandleTouchStart(TouchEventArgs e, ResizeType resizeType)
     {
-        await store.StartTouchResize(resizeType, space, e);
+        await store.StartTouchResize(JS, resizeType, space, e);
     }
 
     private IEnumerable<string> userClasses =>
@@ -88,10 +88,10 @@
         {
             handles.Add(
                 new ResizeHandleProps(store, space, ResizeType.Left)
-            {
-                Id = $"{space.Id}-ml",
-                ClassName = "spaces-resize-handle resize-left"
-            }
+                {
+                    Id = $"{space.Id}-ml",
+                    ClassName = "spaces-resize-handle resize-left"
+                }
                 );
         }
 
@@ -99,10 +99,10 @@
         {
             handles.Add(
                 new ResizeHandleProps(store, space, ResizeType.Right)
-            {
-                Id = $"{space.Id}-mr",
-                ClassName = "spaces-resize-handle resize-right"
-            }
+                {
+                    Id = $"{space.Id}-mr",
+                    ClassName = "spaces-resize-handle resize-right"
+                }
                 );
         }
 
@@ -110,10 +110,10 @@
         {
             handles.Add(
                 new ResizeHandleProps(store, space, ResizeType.Top)
-            {
-                Id = $"{space.Id}-mt",
-                ClassName = "spaces-resize-handle resize-top"
-            }
+                {
+                    Id = $"{space.Id}-mt",
+                    ClassName = "spaces-resize-handle resize-top"
+                }
                 );
         }
 
@@ -121,10 +121,10 @@
         {
             handles.Add(
                 new ResizeHandleProps(store, space, ResizeType.Bottom)
-            {
-                Id = $"{space.Id}-mb",
-                ClassName = "spaces-resize-handle resize-bottom"
-            }
+                {
+                    Id = $"{space.Id}-mb",
+                    ClassName = "spaces-resize-handle resize-bottom"
+                }
                 );
         }
 
@@ -135,7 +135,7 @@
     {
         if (space != null)
         {
-            await store.RemoveSpace(space);
+            await store.RemoveSpace(JS, space);
         }
     }
 
