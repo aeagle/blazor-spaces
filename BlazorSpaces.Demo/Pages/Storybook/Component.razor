@@ -1,0 +1,14 @@
+@page "/storybook/component/{id}"
+
+@renderWidget(BlazorBook.Components.TypeByName(Id))
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private RenderFragment renderWidget(Type t) => builder =>
+    {
+        builder.OpenComponent(0, t);
+        builder.CloseComponent();
+    };
+}

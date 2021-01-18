@@ -8,13 +8,22 @@
     <Fill class="component-list" scrollable="@true">
         <h2>Heading</h2>
         <ul>
-            <li class="active"><a>Component 1</a></li>
-            <li><a>Component 2</a></li>
-            <li><a>Component 3</a></li>
-            <li><a>Component 4</a></li>
+            @foreach (var component in BlazorBook.Components.ComponentNames)
+            {
+                <li class="@classList(component)">
+                    <a @onclick="@(() => SetCurrentStory(component))">@component</a>
+                </li>
+            }
         </ul>
     </Fill>
 </LeftResizable>
 
 @code {
+    string classList(string component) => CurrentStory == component ? "active" : "";
+
+    [Parameter]
+    public string CurrentStory { get; set; }
+
+    [CascadingParameter(Name = "SetCurrentStory")]
+    Func<string, Task> SetCurrentStory { get; set; }
 }

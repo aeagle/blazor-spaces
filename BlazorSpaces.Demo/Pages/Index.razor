@@ -1,64 +1,9 @@
 @page "/"
-
-<ViewPort>
-    <Fill>
-        @if (visible)
-        {
-            <LeftResizable size="@sidebarSize" style="@styleRed">
-                Left
-                <p><button @onclick="ToggleSize">Toggle</button></p>
-            </LeftResizable>
-
-        }
-        <Fill>
-            <TopResizable size="25%" style="@styleBlue">
-                Top
-            </TopResizable>
-            <Fill>
-                <LeftResizable size="25%" style="@styleGreen">
-                    Left
-                </LeftResizable>
-                <Fill>
-                    <TopResizable size="25%" style="@styleBlue">
-                        Top
-                    </TopResizable>
-                    <Fill style="padding: 10px;">
-                        Main
-                        <p><button @onclick="ToggleVisibility">Toggle visibility</button></p>
-                    </Fill>
-                    <BottomResizable size="25%" style="@styleBlue">
-                        Top
-                    </BottomResizable>
-                </Fill>
-                <RightResizable size="25%" style="@styleRed">
-                    Right
-                </RightResizable>
-            </Fill>
-            <BottomResizable size="25%" style="@styleBlue">
-                Top
-            </BottomResizable>
-        </Fill>
-        <RightResizable size="25%" style="@styleGreen">
-            Right
-        </RightResizable>
-    </Fill>
-</ViewPort>
+@inject NavigationManager NavManager
 
 @code {
-    bool expanded { get; set; } = false;
-    bool visible { get; set; } = true;
-    string sidebarSize => expanded ? "50%" : "25%";
-    string styleRed = "background-color: #ffeeee; padding: 10px;";
-    string styleBlue = "background-color: #eeeeff; padding: 10px;";
-    string styleGreen = "background-color: #eeffee; padding: 10px;";
-
-    private void ToggleSize()
+    protected override void OnInitialized()
     {
-        expanded = !expanded;
-    }
-
-    private void ToggleVisibility()
-    {
-        visible = !visible;
+        NavManager.NavigateTo("/storybook");
     }
 }
