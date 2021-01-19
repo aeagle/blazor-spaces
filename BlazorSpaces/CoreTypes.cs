@@ -136,6 +136,7 @@ namespace BlazorSpaces
         public bool Scrollable { get; set; } = false;
         public int? Order { get; set; }
         public string Position { get; set; }
+        public SpaceDefinition Parent { get; set; }
         public List<SpaceDefinition> Children { get; set; } = new();
         public string ParentId { get; set; }
         public SizeInfo Left { get; set; } = new();

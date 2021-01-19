@@ -625,6 +625,7 @@ namespace BlazorSpaces
             newSpace.OnResizeEnd = props.OnResizeEnd ?? newSpace.OnResizeEnd;
 
             newSpace.Update = update;
+            newSpace.Parent = parentId != null ? spaceDefinitions.TryGetValue(parentId, out var parentSpace) ? parentSpace : null : null;
             newSpace.ParentId = parentId;
             newSpace.Anchor = props.Anchor;
             newSpace.Type = props.Type;
