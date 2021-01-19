@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -30,16 +31,12 @@ namespace BlazorSpaces
                 AnchorType.Bottom
             };
 
-        public static List<SpaceDefinition> spaceDefinitions { get; set; } = new();
-
-        public void SetSpaces(IEnumerable<SpaceDefinition> newSpaces)
-        {
-            spaceDefinitions = newSpaces.ToList();
-        }
+        public static ConcurrentDictionary<string, SpaceDefinition> spaceDefinitions { get; set; } = new();
 
         public SpaceDefinition GetSpace(string id)
         {
-            return spaceDefinitions.FirstOrDefault(s => s.Id == id);
+            spaceDefinitions.TryGetValue(id, out var space);
+            return space;
         }
 
         public async Task RecalcSpaces(IJSRuntime JS, SpaceDefinition parent)
@@ -370,7 +367,7 @@ namespace BlazorSpaces
 
         public async Task AddSpace(IJSRuntime JS, SpaceDefinition space)
         {
-            spaceDefinitions.Add(space);
+            spaceDefinitions.TryAdd(space.Id, space);
 
             if (space.ParentId != null)
             {
@@ -387,7 +384,7 @@ namespace BlazorSpaces
 
         public async Task RemoveSpace(IJSRuntime JS, SpaceDefinition space)
         {
-            SetSpaces(spaceDefinitions.Where(x => x.Id != space.Id));
+            spaceDefinitions.TryRemove(space.Id, out var _);
 
             if (space.ParentId != null)
             {
