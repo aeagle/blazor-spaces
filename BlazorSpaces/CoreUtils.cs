@@ -1,18 +1,29 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace BlazorSpaces
 {
     public static class CoreUtils
     {
+        public static string GetEmbeddedWebResource(string name)
+        {
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"BlazorSpaces.wwwroot.{name}"))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+
         public static ValueTask UpdateStyleDefinition(IJSRuntime JS, string spaceId, string definition)
         {
             return JS.InvokeVoidAsync("spaces_updateStyleDefinition", spaceId, definition);

@@ -5,7 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\styles.css" />
+    <Content Remove="wwwroot\spaces.css" />
+    <Content Remove="wwwroot\spaces.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="wwwroot\spaces.css" />
+    <EmbeddedResource Include="wwwroot\spaces.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
