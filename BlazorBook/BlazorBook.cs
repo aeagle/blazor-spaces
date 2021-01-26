@@ -13,7 +13,7 @@ namespace BlazorBook
     {
     }
 
-    public static class Components
+    public static class Stories
     {
         static Dictionary<string, ComponentMetadata> _components = new();
 
