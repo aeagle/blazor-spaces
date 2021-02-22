@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorSpaces.Demo", "BlazorSpaces.Demo\BlazorSpaces.Demo.csproj", "{EB791B44-01F0-467B-88F9-478EFD0B0FFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorSpaces.Demo.WASM", "BlazorSpaces.Demo\BlazorSpaces.Demo.WASM.csproj", "{EB791B44-01F0-467B-88F9-478EFD0B0FFA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorSpaces", "BlazorSpaces\BlazorSpaces.csproj", "{998FCF21-E58A-49F2-B210-74CD8D26C895}"
 EndProject
