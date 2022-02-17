@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using BlazorBook;
 
-namespace BlazorSpaces.Demo
+namespace BlazorSpaces.Demo.WASM
 {
     public class Program
     {
