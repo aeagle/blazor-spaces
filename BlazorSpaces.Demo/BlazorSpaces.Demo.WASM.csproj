@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BlazorBook" Version="0.0.1-beta.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.1" PrivateAssets="all" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
@@ -17,7 +18,6 @@
 </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlazorBook\BlazorBook.csproj" />
     <ProjectReference Include="..\BlazorSpaces.Stories\BlazorSpaces.Stories.csproj" />
     <ProjectReference Include="..\BlazorSpaces\BlazorSpaces.csproj" />
   </ItemGroup>
