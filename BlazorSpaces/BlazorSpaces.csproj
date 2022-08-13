@@ -2,15 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>0.0.1-beta.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="compilerconfig.json" />
     <Content Remove="wwwroot\spaces.css" />
     <Content Remove="wwwroot\spaces.js" />
+    <Content Remove="wwwroot\spaces.less" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="wwwroot\spaces.css" />
+    <EmbeddedResource Include="wwwroot\spaces.less" />
     <EmbeddedResource Include="wwwroot\spaces.js">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -18,10 +23,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="compilerconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BuildWebCompiler" Version="1.12.405" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.2" />

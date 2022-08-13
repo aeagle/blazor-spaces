@@ -152,7 +152,7 @@ namespace BlazorSpaces
         public int? MaximumSize { get; set; }
         public int HandleSize { get; set; } = 5;
         public int TouchHandleSize { get; set; } = 5;
-        public ResizeHandlePlacement HandlePlacement { get; set; } = ResizeHandlePlacement.OverlayInside;
+        public ResizeHandlePlacement HandlePlacement { get; set; } = ResizeHandlePlacement.OverlayBoundary;
         public bool CanResizeTop { get; set; }
         public bool CanResizeLeft { get; set; }
         public bool CanResizeRight { get; set; }

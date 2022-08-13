@@ -10,11 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BlazorBook" Version="0.0.1-beta.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\BlazorBook\BlazorBook.csproj" />
   </ItemGroup>
 
 </Project>
