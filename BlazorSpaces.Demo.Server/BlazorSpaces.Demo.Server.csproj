@@ -5,12 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BlazorBook" Version="0.0.1-beta.1" />
+    <PackageReference Include="BlazorBook" Version="0.0.1-beta.2" />
+    <PackageReference Include="BlazorSpaces" Version="0.0.1-beta.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BlazorSpaces.Stories\BlazorSpaces.Stories.csproj" />
-    <ProjectReference Include="..\BlazorSpaces\BlazorSpaces.csproj" />
   </ItemGroup>
 
 </Project>
