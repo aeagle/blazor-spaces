@@ -5,41 +5,41 @@
     <Fill>
         @if (visible)
         {
-            <LeftResizable size="@sidebarSize" style="@styleRed">
+            <LeftResizable size="@sidebarSize" centerContent="@CenterType.HorizontalVertical" style="@styleRed">
                 Left
                 <p><button @onclick="ToggleSize">Toggle</button></p>
             </LeftResizable>
 
         }
         <Fill>
-            <TopResizable size="25%" style="@styleBlue">
+            <TopResizable size="25%" centerContent="@CenterType.HorizontalVertical" style="@styleBlue">
                 Top
             </TopResizable>
             <Fill>
-                <LeftResizable size="25%" style="@styleGreen">
+                <LeftResizable size="25%" centerContent="@CenterType.HorizontalVertical" style="@styleGreen">
                     Left
                 </LeftResizable>
                 <Fill>
-                    <TopResizable size="25%" style="@styleBlue">
+                    <TopResizable size="25%" centerContent="@CenterType.HorizontalVertical" style="@styleBlue">
                         Top
                     </TopResizable>
                     <Fill style="padding: 10px;">
                         Main
                         <p><button @onclick="ToggleVisibility">Toggle visibility</button></p>
                     </Fill>
-                    <BottomResizable size="25%" style="@styleBlue">
+                    <BottomResizable size="25%" centerContent="@CenterType.HorizontalVertical" style="@styleBlue">
                         Top
                     </BottomResizable>
                 </Fill>
-                <RightResizable size="25%" style="@styleRed">
+                <RightResizable centerContent="@CenterType.HorizontalVertical" size="25%" style="@styleRed">
                     Right
                 </RightResizable>
             </Fill>
-            <BottomResizable size="25%" style="@styleBlue">
+            <BottomResizable centerContent="@CenterType.HorizontalVertical" size="25%" style="@styleBlue">
                 Top
             </BottomResizable>
         </Fill>
-        <RightResizable size="25%" style="@styleGreen">
+        <RightResizable centerContent="@CenterType.HorizontalVertical" size="25%" style="@styleGreen">
             Right
         </RightResizable>
     </Fill>

@@ -5,12 +5,23 @@
 @foreach (var handle in resizeHandles())
 {
     <div id="@handle.Id" class="@handle.ClassName" @onmousedown="@((e) => OnHandleMouseDown(e, handle.ResizeType))"
-        @ontouchstart="@((e) => OnHandleTouchStart(e, handle.ResizeType))" />
+    @ontouchstart="@((e) => OnHandleTouchStart(e, handle.ResizeType))" />
 }
 <div id="@spaceId" class="@outerClass()">
     <div class="@innerClass()" style="@Style" @ref=spaceElement>
         <CascadingValue Value="@space.Id" Name="ParentId" IsFixed="true">
-            @ChildContent
+            @if (space.CenterContent == CenterType.HorizontalVertical)
+            {
+                <VerticallyCentered>@ChildContent</VerticallyCentered>
+            } 
+            else if (space.CenterContent == CenterType.Vertical)
+            {
+                <Centered>@ChildContent</Centered>
+            }
+            else
+            {
+                @ChildContent
+            }
         </CascadingValue>   
     </div>
 </div>
