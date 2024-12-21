@@ -7,10 +7,11 @@ namespace BlazorSpaces
         protected override void BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "script");
-            builder.AddContent(1, (MarkupString)CoreUtils.GetEmbeddedWebResource("spaces.js"));
+            builder.AddAttribute(1, "src", "_content/BlazorSpaces/spaces.js");
             builder.CloseElement();
-            builder.OpenElement(0, "style");
-            builder.AddContent(1, (MarkupString)CoreUtils.GetEmbeddedWebResource("spaces.css"));
+            builder.OpenElement(0, "link");
+            builder.AddAttribute(1, "href", "_content/BlazorSpaces/spaces.min.css");
+            builder.AddAttribute(2, "rel", "stylesheet");
             builder.CloseElement();
         }
     }

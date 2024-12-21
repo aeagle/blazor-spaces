@@ -8,7 +8,7 @@ namespace BlazorSpaces
 
         protected override void BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder builder)
         {
-            builder.AddContent(0, (MarkupString)store.RenderDeferredStyles());
+            builder.AddContent(0, (MarkupString)store.RenderPrerenderedStyles());
         }
     }
 }

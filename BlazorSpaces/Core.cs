@@ -1,28 +1,17 @@
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Channels;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 
 namespace BlazorSpaces
 {
     public class SpaceStore
     {
-        private static SpaceStore instance;
-        public static SpaceStore Instance()
-        {
-            if (instance == null)
-            {
-                instance = new SpaceStore();
-            }
-            return instance;
-        }
-
         private static SpaceDefinition spaceDefaults = new();
 
         private static IEnumerable<AnchorType> AnchorTypes =>
@@ -33,7 +22,7 @@ namespace BlazorSpaces
                 AnchorType.Bottom
             };
 
-        public static ConcurrentDictionary<string, SpaceDefinition> spaceDefinitions { get; set; } = new();
+        public ConcurrentDictionary<string, SpaceDefinition> spaceDefinitions { get; set; } = new();
 
         public SpaceDefinition GetSpace(string id)
         {
@@ -333,7 +322,7 @@ namespace BlazorSpaces
             return string.Join(" ", cssElements);
         }
 
-        private Dictionary<string, string> GlobalStyleUpdates = new();
+        private Dictionary<string, string> PreRenderedStyles = new();
 
         public async Task UpdateStyleDefinition(IJSRuntime JS, SpaceDefinition space)
         {
@@ -345,8 +334,7 @@ namespace BlazorSpaces
             }
             catch (Exception _)
             {
-                //space.DeferedStyleUpdates.Enqueue(definition);
-                GlobalStyleUpdates[space.Id] = definition;
+                PreRenderedStyles[space.Id] = definition;
             }
         }
 
@@ -362,7 +350,7 @@ namespace BlazorSpaces
             }
         }
 
-        public async Task ProcessDeferredStyleUpdates(IJSRuntime JS, SpaceDefinition space)
+        public async Task ProcessPrerenderedStyleUpdates(IJSRuntime JS, SpaceDefinition space)
         {
             while (space.DeferedStyleUpdates.Any())
             {
@@ -374,7 +362,9 @@ namespace BlazorSpaces
             }
         }
 
-        public string RenderDeferredStyles()
+        public bool HasPrerenderedStyles => PreRenderedStyles.Any();
+
+        public string RenderPrerenderedStyles()
         {
             foreach (var space in spaceDefinitions.Values)
             {
@@ -384,12 +374,12 @@ namespace BlazorSpaces
             foreach (var space in spaceDefinitions.Values)
             {
                 var definition = styleDefinition(space);
-                GlobalStyleUpdates[space.Id] = definition;
+                PreRenderedStyles[space.Id] = definition;
             }
 
             StringBuilder result = new();
             result.AppendLine("<style id='spaces-prerender'>");
-            foreach (var def in GlobalStyleUpdates)
+            foreach (var def in PreRenderedStyles)
             {
                 result.AppendLine(def.Value);
             }
