@@ -3,6 +3,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
@@ -41,6 +43,18 @@ namespace BlazorSpaces
 
         public async Task RecalcSpaces(IJSRuntime JS, SpaceDefinition parent)
         {
+            var changed = recalcSpaces(parent);
+
+            foreach (var space in changed)
+            {
+                await UpdateStyleDefinition(JS, space);
+            }
+        }
+
+        private IEnumerable<SpaceDefinition> recalcSpaces(SpaceDefinition parent)
+        {
+            List<SpaceDefinition> changedSpaces = new();
+
             IEnumerable<SpaceDefinition> addDefaultOrders(IEnumerable<SpaceDefinition> spaces)
             {
                 IEnumerable<SpaceDefinition> result = Enumerable.Empty<SpaceDefinition>();
@@ -160,9 +174,11 @@ namespace BlazorSpaces
 
                 if (changed)
                 {
-                    await UpdateStyleDefinition(JS, space);
+                    changedSpaces.Add(space);
                 }
             }
+
+            return changedSpaces;
         }
 
         private static string styleDefinition(SpaceDefinition space)
@@ -317,25 +333,21 @@ namespace BlazorSpaces
             return string.Join(" ", cssElements);
         }
 
+        private Dictionary<string, string> GlobalStyleUpdates = new();
+
         public async Task UpdateStyleDefinition(IJSRuntime JS, SpaceDefinition space)
         {
             var definition = styleDefinition(space);
 
-            //if (RuntimeInformation.OSDescription == "web")
-            //{
             try
             {
                 await CoreUtils.UpdateStyleDefinition(JS, space.Id, definition);
             }
-            catch
+            catch (Exception _)
             {
-
+                //space.DeferedStyleUpdates.Enqueue(definition);
+                GlobalStyleUpdates[space.Id] = definition;
             }
-            //}
-            //else
-            //{
-            //    space.DeferedStyleUpdates.Enqueue(definition);
-            //}
         }
 
         public async Task RemoveStyleDefinition(IJSRuntime JS, SpaceDefinition space)
@@ -350,19 +362,39 @@ namespace BlazorSpaces
             }
         }
 
-        public async Task ProcessDeferedStyleUpdates(IJSRuntime JS, SpaceDefinition space)
+        public async Task ProcessDeferredStyleUpdates(IJSRuntime JS, SpaceDefinition space)
         {
-            if (RuntimeInformation.OSDescription != "web")
+            while (space.DeferedStyleUpdates.Any())
             {
-                while (space.DeferedStyleUpdates.Any())
-                {
-                    await CoreUtils.UpdateStyleDefinition(JS, space.Id, space.DeferedStyleUpdates.Dequeue());
-                }
-                while (space.DeferedStyleRemovals.Any())
-                {
-                    await CoreUtils.RemoveStyleDefinition(JS, space.Id);
-                }
+                await CoreUtils.UpdateStyleDefinition(JS, space.Id, space.DeferedStyleUpdates.Dequeue());
             }
+            while (space.DeferedStyleRemovals.Any())
+            {
+                await CoreUtils.RemoveStyleDefinition(JS, space.Id);
+            }
+        }
+
+        public string RenderDeferredStyles()
+        {
+            foreach (var space in spaceDefinitions.Values)
+            {
+                recalcSpaces(space);
+            }
+
+            foreach (var space in spaceDefinitions.Values)
+            {
+                var definition = styleDefinition(space);
+                GlobalStyleUpdates[space.Id] = definition;
+            }
+
+            StringBuilder result = new();
+            result.AppendLine("<style id='spaces-prerender'>");
+            foreach (var def in GlobalStyleUpdates)
+            {
+                result.AppendLine(def.Value);
+            }
+            result.AppendLine("</style>");
+            return result.ToString();
         }
 
         public async Task AddSpace(IJSRuntime JS, SpaceDefinition space)

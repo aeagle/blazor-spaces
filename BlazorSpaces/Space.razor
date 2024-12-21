@@ -1,6 +1,7 @@
 @implements IAsyncDisposable
 @inherits SpaceComponentBase
 @inject IJSRuntime JS
+@inject SpaceStore store
 
 @foreach (var handle in resizeHandles())
 {
@@ -12,11 +13,11 @@
         <CascadingValue Value="@space.Id" Name="ParentId" IsFixed="true">
             @if (space.CenterContent == CenterType.HorizontalVertical)
             {
-                <VerticallyCentered>@ChildContent</VerticallyCentered>
+                <Centered>@ChildContent</Centered>
             } 
             else if (space.CenterContent == CenterType.Vertical)
             {
-                <Centered>@ChildContent</Centered>
+                <VerticallyCentered>@ChildContent</VerticallyCentered>
             }
             else
             {
@@ -27,7 +28,6 @@
 </div>
 
 @code {
-    SpaceStore store => SpaceStore.Instance();
     SpaceDefinition space;
     string spaceId;
     ElementReference spaceElement;
@@ -52,10 +52,11 @@
         }
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         space.Element = spaceElement;
-        return base.OnAfterRenderAsync(firstRender);
+        await store.ProcessDeferredStyleUpdates(JS, space);
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     protected async Task OnHandleMouseDown(MouseEventArgs e, ResizeType resizeType)
